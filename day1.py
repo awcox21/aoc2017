@@ -22,3 +22,20 @@ for inp in test_inputs:
     print inverse_captcha(inp)
 
 print(inverse_captcha(puzzle_input))
+
+test_inputs = ['1212', '1221', '123425', '123123', '12131415']
+
+def inverse_captcha_2(input_):
+    sum_ = 0
+    length = len(input_)
+    delta = int(len(input_) / 2)
+    for count, i in enumerate(input_):
+        check = (count + delta) % length
+        if i == input_[check]:
+            sum_ += int(i)
+    return sum_
+
+for inp in test_inputs:
+    print inverse_captcha_2(inp)
+
+print(inverse_captcha_2(puzzle_input))
