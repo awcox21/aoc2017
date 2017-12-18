@@ -1,6 +1,16 @@
 from string import ascii_lowercase
 import re
 
+#class Memoize(object):
+#    def __init__(self, fn):
+#        self.fn = fn
+#        self.memo = {}
+#
+#    def __call__(self, *args):
+#        if args not in self.memo:
+#            self.memo[args] = self.fn(*args)
+#        return self.memo[args]
+
 def spin(command, list_):
     reg = re.match('s(\d+)', command)
     num = int(reg.group(1))
@@ -21,15 +31,21 @@ def partner(command, list_):
     return list_
 
 def dance(list_, commands, repeat=1):
+    memo = {}
     for _ in range(repeat):
-        for command in commands:
-            try:
-                list_ = spin(command, list_)
-            except AttributeError:
+        start = ''.join(list_)
+        if start in memo:
+            list_ = [_i for _i in memo[start]]
+        else:
+            for command in commands:
                 try:
-                    list_ = exchange(command, list_)
+                    list_ = spin(command, list_)
                 except AttributeError:
-                    list_ = partner(command, list_)
+                    try:
+                        list_ = exchange(command, list_)
+                    except AttributeError:
+                        list_ = partner(command, list_)
+            memo[start] = ''.join(list_)
     return ''.join(list_)
 
 def day16(path, repeat=1):
@@ -49,5 +65,5 @@ def day16(path, repeat=1):
 path = 'day16_input.txt'
 #out = day16(path)
 #print(out)
-out = day16(path, int(1e9))
+out = day16(path, 10000)  # int(1e9))
 print(out)
